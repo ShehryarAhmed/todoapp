@@ -52,6 +52,8 @@ public class TaskContentProvider extends ContentProvider {
 
         Context mContext = getContext();
 
+
+
         mTaskDbHelper = new TaskDbHelper(mContext);
         return true;
     }
