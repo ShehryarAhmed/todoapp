@@ -139,7 +139,7 @@ public class TaskContentProvider extends ContentProvider {
             case TASKS_WITH_ID:
                 String id = uri.getPathSegments().get(1);
 
-                taskDeleted = db.delete(TaskContract.TaskEntry.TABLE_NAME,"id=?",new String[]{id});
+                taskDeleted = db.delete(TaskContract.TaskEntry.TABLE_NAME,"_id=?",new String[]{id});
                 break;
             default :
                 throw new UnsupportedOperationException("UnKnownUri: "+uri);

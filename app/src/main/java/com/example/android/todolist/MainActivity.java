@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements
                 int id = (int) viewHolder.itemView.getTag();
                 String stringId = Integer.toString(id);
                 Uri uri = TaskContract.TaskEntry.CONTETN_URI;
-                uri.buildUpon().appendPath(stringId).build();
+                uri = uri.buildUpon().appendPath(stringId).build();
                 getContentResolver().delete(uri,null,null);
                 getSupportLoaderManager().restartLoader(TASK_LOADER_ID,null, MainActivity.this);
             }
