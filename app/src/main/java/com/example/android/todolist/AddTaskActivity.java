@@ -26,12 +26,21 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.example.android.todolist.data.TaskContract;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 
 public class AddTaskActivity extends AppCompatActivity {
 
     // Declare a member variable to keep track of a task's selected mPriority
     private int mPriority;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +50,9 @@ public class AddTaskActivity extends AppCompatActivity {
         // Initialize to highest mPriority by default (mPriority = 1)
         ((RadioButton) findViewById(R.id.radButton1)).setChecked(true);
         mPriority = 1;
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 
@@ -52,16 +64,16 @@ public class AddTaskActivity extends AppCompatActivity {
         // Not yet implemented
         String input = ((EditText) findViewById(R.id.editTextTaskDescription)).getText().toString();
 
-        if(input.length() == 0){
+        if (input.length() == 0) {
             return;
         }
         ContentValues contentValues = new ContentValues();
-        contentValues.put(TaskContract.TaskEntry.COLUMN_DESCRIPTION,input);
-        contentValues.put(TaskContract.TaskEntry.COLUMN_PRIORITY,mPriority);
-        Uri uri = getContentResolver().insert(TaskContract.TaskEntry.CONTETN_URI,contentValues);
+        contentValues.put(TaskContract.TaskEntry.COLUMN_DESCRIPTION, input);
+        contentValues.put(TaskContract.TaskEntry.COLUMN_PRIORITY, mPriority);
+        Uri uri = getContentResolver().insert(TaskContract.TaskEntry.CONTETN_URI, contentValues);
 
-        if(uri != null){
-            Toast.makeText(getBaseContext(),uri.toString(),Toast.LENGTH_SHORT).show();
+        if (uri != null) {
+            Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_SHORT).show();
         }
         finish();
     }
@@ -79,5 +91,41 @@ public class AddTaskActivity extends AppCompatActivity {
         } else if (((RadioButton) findViewById(R.id.radButton3)).isChecked()) {
             mPriority = 3;
         }
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("AddTask Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
     }
 }

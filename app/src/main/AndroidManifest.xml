@@ -31,7 +31,11 @@
             android:authorities="com.example.android.todolist"
             android:name="com.example.android.todolist.data.TaskContentProvider"
             android:exported="false">
-        </provider>
+        </provider><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
         <!-- exported = false limits access to this ContentProvider to only this app -->
 
     </application>
