@@ -28,6 +28,7 @@ import android.media.UnsupportedSchemeException;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.widget.Switch;
+import android.widget.Toast;
 
 // TODO (1) Verify that TaskContentProvider extends from ContentProvider and implements required methods
 public class TaskContentProvider extends ContentProvider {
@@ -40,7 +41,7 @@ public class TaskContentProvider extends ContentProvider {
     public static UriMatcher buildUriMatcher(){
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(TaskContract.AUTHORITY,TaskContract.PATH_TASK,TASKS);
-        uriMatcher.addURI(TaskContract.AUTHORITY,TaskContract.PATH_TASK,TASKS_WITH_ID);
+        uriMatcher.addURI(TaskContract.AUTHORITY,TaskContract.PATH_TASK+"/#",TASKS_WITH_ID);
         return uriMatcher;
     }
 
@@ -56,6 +57,7 @@ public class TaskContentProvider extends ContentProvider {
         // [Hint] Declare the DbHelper as a global variable
 
         Context mContext = getContext();
+        Toast.makeText(getContext(),"TAskcontentProvider",Toast.LENGTH_SHORT).show();
 
 
 
@@ -112,6 +114,13 @@ public class TaskContentProvider extends ContentProvider {
                         null,
                         sortOrder);
                 break;
+            case TASKS_WITH_ID:
+                String id =uri.getPathSegments().get(1);
+                String mSelection = "_id=?";
+                String[] mSelectionArgs = new String[]{id};
+
+                retCursor = db.query(TaskContract.TaskEntry.TABLE_NAME,projection,mSelection,mSelectionArgs,null,null,sortOrder);
+                break;
             default :
                 throw new UnsupportedOperationException("Unknown Uri " + uri);
         }
@@ -123,8 +132,22 @@ public class TaskContentProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
+    final SQLiteDatabase db = mTaskDbHelper.getWritableDatabase();
+        int match = sUrimatcher.match(uri);
+        int taskDeleted;
+        switch (match){
+            case TASKS_WITH_ID:
+                String id = uri.getPathSegments().get(1);
 
-        throw new UnsupportedOperationException("Not yet implemented");
+                taskDeleted = db.delete(TaskContract.TaskEntry.TABLE_NAME,"id=?",new String[]{id});
+                break;
+            default :
+                throw new UnsupportedOperationException("UnKnownUri: "+uri);
+        }
+        if(taskDeleted != 0 ){
+            getContext().getContentResolver().notifyChange(uri,null);
+        }
+        return taskDeleted;
     }
 
 
