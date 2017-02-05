@@ -19,6 +19,7 @@ package com.example.android.todolist.data;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -26,6 +27,17 @@ import android.support.annotation.NonNull;
 // TODO (1) Verify that TaskContentProvider extends from ContentProvider and implements required methods
 public class TaskContentProvider extends ContentProvider {
 
+    public static final int TASKS = 100;
+
+    public static final int TASKS_WITH_ID = 101;
+    private static final UriMatcher sUrimatcher = buildUriMatcher();
+
+    public static UriMatcher buildUriMatcher(){
+        UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+        uriMatcher.addURI(TaskContract.AUTHORITY,TaskContract.PATH_TASK,TASKS);
+        uriMatcher.addURI(TaskContract.AUTHORITY,TaskContract.PATH_TASK,TASKS_WITH_ID);
+        return uriMatcher;
+    }
 
     private TaskDbHelper mTaskDbHelper;
     /* onCreate() is where you should initialize anything you’ll need to setup
